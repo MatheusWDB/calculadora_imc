@@ -8,9 +8,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String info = '';
   final TextEditingController weightController = TextEditingController();
   final TextEditingController heightController = TextEditingController();
+
+  String info = 'Informe os dados';
 
   String? errorWeight;
   String? errorHeight;
@@ -140,10 +141,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   void reset() {
+    weightController.clear();
+    heightController.clear();
     setState(() {
-      weightController.clear();
-      heightController.clear();
-      info = '';
+      info = 'Informe os dados';
       errorHeight = null;
       errorWeight = null;
     });
@@ -155,11 +156,12 @@ class _HomePageState extends State<HomePage> {
       errorWeight = null;
 
       if (weightController.text == '') {
-        errorWeight = 'Coloque o seu peso';
+        errorWeight = 'Informe o seu peso';
         return;
       }
+
       if (heightController.text == '') {
-        errorHeight = 'Coloque a sua altura';
+        errorHeight = 'Informe a sua altura';
         return;
       }
 
@@ -175,24 +177,29 @@ class _HomePageState extends State<HomePage> {
         info = 'Abaixo do peso (imc: ${imc.toStringAsPrecision(3)})';
         return;
       }
+
       if (imc < 24.9) {
-        info = 'Peso ideal (imc: ${imc.toStringAsPrecision(3)}';
+        info = 'Peso ideal (imc: ${imc.toStringAsPrecision(3)})';
         return;
       }
+
       if (imc < 29.9) {
-        info = 'Sobrepeso (imc: ${imc.toStringAsPrecision(3)}';
+        info = 'Sobrepeso (imc: ${imc.toStringAsPrecision(3)})';
         return;
       }
+
       if (imc < 34.9) {
-        info = 'Obesidade grau I (imc: ${imc.toStringAsPrecision(3)}';
+        info = 'Obesidade grau I (imc: ${imc.toStringAsPrecision(3)})';
         return;
       }
+
       if (imc < 39.9) {
-        info = 'Obesidade grau II (imc: ${imc.toStringAsPrecision(3)}';
+        info = 'Obesidade grau II (imc: ${imc.toStringAsPrecision(3)})';
         return;
       }
+
       if (imc > 40) {
-        info = 'Obesidade mórbida (imc: ${imc.toStringAsPrecision(3)}';
+        info = 'Obesidade mórbida (imc: ${imc.toStringAsPrecision(3)})';
         return;
       }
     });
