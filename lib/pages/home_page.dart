@@ -8,6 +8,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  String info = '';
+  final TextEditingController weightController = TextEditingController();
+  final TextEditingController heightController = TextEditingController();
+
+  String? errorWeight;
+  String? errorHeight;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -24,7 +31,7 @@ class _HomePageState extends State<HomePage> {
           backgroundColor: Colors.green,
           actions: [
             IconButton(
-              onPressed: () {},
+              onPressed: reset,
               icon: Icon(Icons.refresh),
               color: Colors.white,
             ),
@@ -43,8 +50,11 @@ class _HomePageState extends State<HomePage> {
                 color: Colors.green,
               ),
               TextField(
+                cursorColor: Colors.green,
+                controller: weightController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
+                  errorText: errorWeight,
                   labelText: 'Peso (kg)',
                   suffixText: 'kg',
                   labelStyle: TextStyle(
@@ -55,6 +65,12 @@ class _HomePageState extends State<HomePage> {
                     color: Colors.green,
                     fontSize: 25,
                   ),
+                  focusedBorder: const UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.green,
+                      width: 2.1,
+                    ),
+                  ),
                 ),
                 textAlign: TextAlign.center,
                 style: TextStyle(
@@ -63,15 +79,27 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               TextField(
+                cursorColor: Colors.green,
+                controller: heightController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
+                  errorText: errorHeight,
                   labelText: 'Altura (cm)',
                   suffixText: 'cm',
                   labelStyle: TextStyle(
                     color: Colors.green,
                     fontSize: 25,
                   ),
-                  suffixStyle: TextStyle(color: Colors.green, fontSize: 25),
+                  suffixStyle: TextStyle(
+                    color: Colors.green,
+                    fontSize: 25,
+                  ),
+                  focusedBorder: const UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.green,
+                      width: 2.1,
+                    ),
+                  ),
                 ),
                 textAlign: TextAlign.center,
                 style: TextStyle(
@@ -86,7 +114,7 @@ class _HomePageState extends State<HomePage> {
                     backgroundColor: Colors.green,
                     fixedSize: Size(50, 50),
                   ),
-                  onPressed: () {},
+                  onPressed: calculate,
                   child: Text(
                     'Calcular',
                     style: TextStyle(
@@ -97,7 +125,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               Text(
-                'Info',
+                info,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.green,
@@ -109,5 +137,64 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  void reset() {
+    setState(() {
+      weightController.clear();
+      heightController.clear();
+      info = '';
+      errorHeight = null;
+      errorWeight = null;
+    });
+  }
+
+  void calculate() {
+    setState(() {
+      errorHeight = null;
+      errorWeight = null;
+
+      if (weightController.text == '') {
+        errorWeight = 'Coloque o seu peso';
+        return;
+      }
+      if (heightController.text == '') {
+        errorHeight = 'Coloque a sua altura';
+        return;
+      }
+
+      double weight = double.parse(weightController.text);
+      double height = double.parse(heightController.text) / 100;
+
+      weightController.clear();
+      heightController.clear();
+
+      double imc = weight / (height * height);
+
+      if (imc < 18.5) {
+        info = 'Abaixo do peso (imc: ${imc.toStringAsPrecision(3)})';
+        return;
+      }
+      if (imc < 24.9) {
+        info = 'Peso ideal (imc: ${imc.toStringAsPrecision(3)}';
+        return;
+      }
+      if (imc < 29.9) {
+        info = 'Sobrepeso (imc: ${imc.toStringAsPrecision(3)}';
+        return;
+      }
+      if (imc < 34.9) {
+        info = 'Obesidade grau I (imc: ${imc.toStringAsPrecision(3)}';
+        return;
+      }
+      if (imc < 39.9) {
+        info = 'Obesidade grau II (imc: ${imc.toStringAsPrecision(3)}';
+        return;
+      }
+      if (imc > 40) {
+        info = 'Obesidade mórbida (imc: ${imc.toStringAsPrecision(3)}';
+        return;
+      }
+    });
   }
 }
